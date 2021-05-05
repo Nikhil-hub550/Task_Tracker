@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AddTask from './component/AddTask';
 import Header from './component/Header';
 import Tasks from './component/Tasks';
 
@@ -27,16 +28,37 @@ function App() {
     ]
   )
 
+  //Add Tasks Function
+  const addTask = (task) => {
+    const id = Math.floor(Math.random() * 10000 + 1);
+    const newTask = {id, ...task}
+
+    setTasks({...tasks, newTask});
+  }
+
   //Delete Tasks.
   const deleteTask = (id) => {
     // console.log(id);
-    setTasks(tasks.filter((task) =>  task.id !== id));
+    setTasks(tasks.filter((task) => task.id !== id));
   }
+
+  //Reminder Function
+  const toggleReminder = (id) => {
+    // console.log(id);
+    setTasks(tasks.map((task) =>
+      task.id === id ? { ...task, reminder: !task.reminder } : task
+      )
+    )};
 
   return (
     <div className='container'>
       <Header title='Task Tracker' />
-      <Tasks tasks={tasks} onDelete={deleteTask} />
+      <AddTask onAdd={addTask} />
+      {tasks.length > 0
+        ?
+        <Tasks tasks={tasks} deleteTask={deleteTask} onToggle={toggleReminder} />
+        :
+        'No Tasks To Show'}
     </div>
   );
 }
